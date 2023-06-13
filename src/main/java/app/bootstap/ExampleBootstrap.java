@@ -36,14 +36,19 @@ public
     }
 
     private void initDB(){
-        Product product = new Product("peach", "just a regular peach", 17999L);
-        productRepository.save(product);
-        MyUser myUser = new MyUser("1","1");
-        myUserRepository.save(myUser);
-        MyOrder myOrder = new MyOrder(myUser);
-        myOrderRepository.save(myOrder);
-        CartItem cartItem = new CartItem(myOrder, product, 2);
-        cartItemRepository.save(cartItem);
-        myOrder.getCartItems().add(cartItem);
+        Product peach = new Product("peach", "just a regular peach", 17999L);
+        productRepository.save(peach);
+        MyUser myUser1 = new MyUser("1","1");
+        myUserRepository.save(myUser1);
+        MyOrder myOrder1 = new MyOrder(myUser1);
+        myOrderRepository.save(myOrder1);
+        CartItem cartItem1 = new CartItem(myOrder1, peach, 2);
+        cartItemRepository.save(cartItem1);
+        myOrder1.getCartItems().add(cartItem1);
+
+        Product apple = new Product("apple", """
+                Apple, scientifically known as Malus domestica, is a delightful and versatile fruit that has captivated human taste buds for centuries.
+                """, 999999L);
+        productRepository.save(apple);
     }
 }

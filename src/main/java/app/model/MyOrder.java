@@ -26,4 +26,8 @@ public class MyOrder {
     public List<CartItem> getCartItems() {
         return cartItems;
     }
+
+    public Long getId() {
+        return id;
+    }
 }

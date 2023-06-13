@@ -1,5 +1,6 @@
 package app.repositories;
 
+import app.model.CartItem;
 import app.model.Product;
 import org.springframework.data.repository.CrudRepository;
 
