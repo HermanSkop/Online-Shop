@@ -8,4 +8,6 @@ import java.util.List;
 public interface CartItemRepository extends CrudRepository<CartItem, Long> {
     CartItem findByMyOrderIdAndProductId(Long cartId, Long productId);
     List<CartItem> findAllByMyOrderId(Long cartId);
+
+    void deleteAllByMyOrderId(Long id);
 }

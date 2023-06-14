@@ -34,4 +34,8 @@ public class MyOrder {
     public Long getId() {
         return id;
     }
+
+    public MyUser getMyUser() {
+        return myUser;
+    }
 }

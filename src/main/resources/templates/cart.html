@@ -51,6 +51,7 @@
             margin-bottom: 0;
         }
         .menu a {
+            margin-left: 10px;
             background-color: #333;
             color: #fff;
             border: none;
@@ -66,18 +67,15 @@
 <body>
 <div class="menu">
     <h1>Cart</h1>
-    <a th:href="@{/products}">
-        Products
-    </a>
+    <a th:hidden="${cart_products.isEmpty()}" th:href="@{/cart/order}">Place order</a>
+    <a th:href="@{/products}">Products</a>
 </div>
 <div th:each="product : ${cart_products}" class="product">
     <h4 th:text="${product.getName()}"></h4>
     <p th:text="'Price: $' + ${product.getPrice()}"></p>
     <p th:text="${product.getShortDescription(20)}"></p>
     <p th:text="'Quantity: ' + ${product.getQuantity()}"></p>
-    <a th:href="@{/cart/remove/{productId}/1(productId=${product.getId()})}">
-        Remove one
-    </a>
+    <a th:href="@{/cart/remove/{productId}/1(productId=${product.getId()})}">Remove one</a>
 </div>
 </body>
 </html>

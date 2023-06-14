@@ -29,7 +29,8 @@ public class Product {
         return description;
     }
     public String getShortDescription(int length) {
-        return description.substring(0, length) + (description.length()>length?"...":"");
+        if (description.length() <= length) return description;
+        return description.substring(0, length) + "...";
     }
 
     public Long getPrice() {

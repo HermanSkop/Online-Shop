@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import app.model.CartItem;
 import app.repositories.MyOrderRepository;
 
+import java.util.List;
+
 @Component
 public
     class ExampleBootstrap
@@ -49,6 +51,24 @@ public
         Product apple = new Product("apple", """
                 Apple, scientifically known as Malus domestica, is a delightful and versatile fruit that has captivated human taste buds for centuries.
                 """, 999999L);
-        productRepository.save(apple);
+        Product banana = new Product("banana", "ripe and delicious banana", 9999L);
+        Product orange = new Product("orange", "refreshing citrus fruit", 12999L);
+        Product watermelon = new Product("watermelon", "juicy summer fruit", 24999L);
+        Product strawberry = new Product("strawberry", "sweet and tangy berries", 8999L);
+        Product pineapple = new Product("pineapple", "tropical fruit", 19999L);
+        Product mango = new Product("mango", "sweet and juicy tropical fruit", 29999L);
+        Product kiwi = new Product("kiwi", "small and sour fruit", 4999L);
+        Product lemon = new Product("lemon", "sour citrus fruit", 9999L);
+        Product grape = new Product("grape", "sweet and juicy berries", 5999L);
+        Product cherry = new Product("cherry", "sweet and juicy berries", 6999L);
+        Product pear = new Product("pear", "just a regular pear", 14999L);
+        Product plum = new Product("plum", "just a regular plum", 12999L);
+        Product apricot = new Product("apricot", "just a regular apricot", 19999L);
+        Product nectarine = new Product("nectarine", "just a regular nectarine", 19999L);
+        Product papaya = new Product("papaya", "just a regular papaya", 29999L);
+        Product lychee = new Product("lychee", "just a regular lychee", 39999L);
+
+        productRepository.saveAll(List.of(apple, banana, orange, watermelon, strawberry, pineapple, mango, kiwi, lemon,
+                grape, cherry, pear, plum, apricot, nectarine, papaya, lychee));
     }
 }

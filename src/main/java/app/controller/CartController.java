@@ -65,7 +65,14 @@ class CartController {
         }
         return "redirect:../../../cart";
     }
-
+    @RequestMapping("/cart/order")
+    public String order(Model model){
+        if(httpSession.getAttribute("order_id") == null) return "login";
+        long currentOrderId = (long) httpSession.getAttribute("order_id");
+        if(getProductsInCart(myOrderRepository.findById(currentOrderId).orElseThrow()).isEmpty()) return "redirect:../cart";
+        placeOrder(myOrderRepository.findById(currentOrderId).orElseThrow());
+        return "redirect:../products";
+    }
     @RequestMapping("/cart")
     public String cart(Model model){
         if(httpSession.getAttribute("order_id") == null)
@@ -106,5 +113,11 @@ class CartController {
                 .stream()
                 .map(cartItem -> new CartProduct(cartItem.getProduct(), cartItem.getQuantity()))
                 .collect(Collectors.toCollection(ArrayList::new));
+    }
+    private void placeOrder(MyOrder order){
+        // TODO proper order placement
+        MyOrder newOrder = new MyOrder(order.getMyUser());
+        myOrderRepository.save(newOrder);
+        httpSession.setAttribute("order_id", newOrder.getId());
     }
 }
