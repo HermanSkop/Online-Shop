@@ -14,7 +14,6 @@
         h1 {
             color: #333;
         }
-
         .product {
             display: flex;
             background-color: #fff;
@@ -23,14 +22,36 @@
             margin-bottom: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-
         .product p {
+            margin: 0;
             flex: 1;
         }
-        .product h3 {
+        .product h4 {
+            margin: 0;
             flex: 1;
         }
-        .product button {
+        .product a {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 2px;
+            cursor: pointer;
+        }
+        a {
+            text-decoration: none;
+        }
+        .menu {
+            color: #212121;
+            padding: 10px;
+            display: flex;
+        }
+        .menu h1 {
+            flex: 1;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        .menu a {
             background-color: #333;
             color: #fff;
             border: none;
@@ -41,16 +62,19 @@
     </style>
 </head>
 <body>
-<h1>Products</h1>
-
+<div class="menu">
+    <h1>Products</h1>
+    <a th:href="@{/cart}">
+        Cart
+    </a>
+</div>
 <div th:each="product : ${products}" class="product">
-    <h3 th:text="${product.getName()}"></h3>
+    <h4 th:text="${product.getName()}"></h4>
     <p th:text="'Price: $' + ${product.getPrice()}"></p>
     <p th:text="${product.getShortDescription(20)}"></p>
-
-    <button class="add-to-cart">
-        <span class="button-text">Add to Cart</span>
-    </button>
+    <a th:href="@{/cart/add/{productId}/1(productId=${product.getId()})}">
+        Add to Cart
+    </a>
 </div>
 </body>
 </html>

@@ -25,12 +25,32 @@
         }
 
         .product p {
+            margin: 0;
             flex: 1;
         }
-        .product h3 {
+        .product a {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 2px;
+            cursor: pointer;
+        }
+        .product h4 {
+            margin: 0;
             flex: 1;
         }
-        .product button {
+        .menu {
+            color: #212121;
+            padding: 10px;
+            display: flex;
+        }
+        .menu h1 {
+            flex: 1;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        .menu a {
             background-color: #333;
             color: #fff;
             border: none;
@@ -38,19 +58,26 @@
             padding: 10px;
             cursor: pointer;
         }
+        a {
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
-<h1>Cart</h1>
-
+<div class="menu">
+    <h1>Cart</h1>
+    <a th:href="@{/products}">
+        Products
+    </a>
+</div>
 <div th:each="product : ${cart_products}" class="product">
-    <h3 th:text="${product.getName()}"></h3>
+    <h4 th:text="${product.getName()}"></h4>
     <p th:text="'Price: $' + ${product.getPrice()}"></p>
     <p th:text="${product.getShortDescription(20)}"></p>
-
-    <button class="add-to-cart">
-        <span class="button-text">Add to Cart</span>
-    </button>
+    <p th:text="'Quantity: ' + ${product.getQuantity()}"></p>
+    <a th:href="@{/cart/remove/{productId}/1(productId=${product.getId()})}">
+        Remove one
+    </a>
 </div>
 </body>
 </html>

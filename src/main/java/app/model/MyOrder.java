@@ -18,6 +18,10 @@ public class MyOrder {
         this();
         this.myUser = myUser;
     }
+    public MyOrder(MyUser myUser, List<CartItem> cartItems) {
+        this(myUser);
+        this.cartItems = cartItems;
+    }
 
     protected MyOrder() {
         cartItems = new LinkedList<>();

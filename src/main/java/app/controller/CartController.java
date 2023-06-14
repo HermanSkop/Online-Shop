@@ -7,6 +7,8 @@ import app.model.Product;
 import app.repositories.CartItemRepository;
 import app.repositories.MyOrderRepository;
 import app.repositories.ProductRepository;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,17 +25,19 @@ class CartController {
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
     private final MyOrderRepository myOrderRepository;
-
-    public CartController(ProductRepository productRepository, CartItemRepository cartItemRepository, MyOrderRepository myOrderRepository) {
+    private final HttpSession httpSession;
+    @Autowired
+    public CartController(ProductRepository productRepository, CartItemRepository cartItemRepository, MyOrderRepository myOrderRepository, HttpSession httpSession) {
         this.productRepository = productRepository;
         this.cartItemRepository = cartItemRepository;
         this.myOrderRepository = myOrderRepository;
+        this.httpSession = httpSession;
     }
 
     @RequestMapping("/cart/add/{id}/{quantity}")
-    public String addItem(@PathVariable("id") Long productId, @PathVariable("quantity") int quantity, Model model){
-        if(model.getAttribute("order_id") == null) return "login";
-        long currentOrderId = (long) model.getAttribute("order_id");
+    public String addItem(@PathVariable("id") Long productId, @PathVariable("quantity") int quantity){
+        if(httpSession.getAttribute("order_id") == null) return "login";
+        long currentOrderId = (long) httpSession.getAttribute("order_id");
         try {
             addProductToCart(
                     productRepository.findById(productId).orElseThrow(),
@@ -43,13 +47,13 @@ class CartController {
         catch (NoSuchElementException e) {
             return "login";
         }
-        return "redirect:cart";
+        return "redirect:../../../products";
     }
 
     @RequestMapping("/cart/remove/{id}/{quantity}")
-    public String removeItem(@PathVariable("id") Long productId, @PathVariable("quantity") int quantity, Model model){
-        if(model.getAttribute("order_id") == null) return "login";
-        long currentOrderId = (long) model.getAttribute("order_id");
+    public String removeItem(@PathVariable("id") Long productId, @PathVariable("quantity") int quantity){
+        if(httpSession.getAttribute("order_id") == null) return "login";
+        long currentOrderId = (long) httpSession.getAttribute("order_id");
         try {
             removeFromCart(
                     productRepository.findById(productId).orElseThrow(),
@@ -59,14 +63,14 @@ class CartController {
         catch (NoSuchElementException e) {
             return "login";
         }
-        return "redirect:cart";
+        return "redirect:../../../cart";
     }
 
     @RequestMapping("/cart")
-    public String removeItem(Model model){
-        if(model.getAttribute("order_id") == null) // TODO: finish login first
+    public String cart(Model model){
+        if(httpSession.getAttribute("order_id") == null)
             return "login";
-        long currentOrderId = (long) model.getAttribute("order_id");
+        long currentOrderId = (long) httpSession.getAttribute("order_id");
         try {
             model.addAttribute( "cart_products", getProductsInCart(myOrderRepository.findById(currentOrderId).orElseThrow()));
         }
@@ -76,31 +80,31 @@ class CartController {
         return "cart";
     }
     private void addProductToCart(Product product, MyOrder order, int quantity){
-        if(cartItemRepository.findByMyOrderIdAndProductId(order.getId(), product.getId()) == null)
+        CartItem cartItem = cartItemRepository.findByMyOrderIdAndProductId(order.getId(), product.getId());
+        if(cartItem == null)
             cartItemRepository.save(new CartItem(order, product, quantity));
-        else
-            cartItemRepository.findByMyOrderIdAndProductId(order.getId(), product.getId()).setQuantity(
+        else {
+            cartItem.setQuantity(
                     cartItemRepository.findByMyOrderIdAndProductId(order.getId(), product.getId()).getQuantity() + quantity);
+            cartItemRepository.save(cartItem);
+        }
     }
     private void removeFromCart (Product product, MyOrder order, int quantity){
-        if(cartItemRepository.findByMyOrderIdAndProductId(order.getId(), product.getId()) != null){
-            CartItem cart = cartItemRepository.findByMyOrderIdAndProductId(order.getId(), product.getId());
+        CartItem cart = cartItemRepository.findByMyOrderIdAndProductId(order.getId(), product.getId());
+        if(cart != null){
             if(cart.getQuantity()-quantity <= 0)
                 cartItemRepository.delete(cart);
-            else
-                cart.setQuantity(cart.getQuantity()-quantity);
+            else {
+                cart.setQuantity(cart.getQuantity() - quantity);
+                cartItemRepository.save(cart);
             }
+        }
     }
-
     private ArrayList<CartProduct> getProductsInCart(MyOrder order){
-        List<CartItem> cartItems = (List<CartItem>) cartItemRepository.findCartItemByMyOrderIdAndProductId(order.getId(), order.getId());
+        List<CartItem> cartItems = cartItemRepository.findAllByMyOrderId(order.getId());
         return cartItems
                 .stream()
-                .map(CartItem::getProduct)
-                .collect(Collectors.groupingBy(p -> p))
-                .values()
-                .stream()
-                .map(CartProduct::new)
+                .map(cartItem -> new CartProduct(cartItem.getProduct(), cartItem.getQuantity()))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 }

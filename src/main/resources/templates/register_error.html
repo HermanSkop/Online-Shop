@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Login Page</title>
+    <title>Register Page</title>
     <style>
         body {
             background-color: #f5f5f5;
@@ -59,18 +59,18 @@
 </head>
 <body>
 <div class="container">
-    <form method="get" action="/log-in" class="login-form">
-        <h2>Login</h2>
+    <form method="get" action="/sign-up" class="login-form">
+        <h2>Register</h2>
         <label>
             <input name="username" type="text" placeholder="Username" required>
+            <p style="color: #e33f3f;">Such user already exists</p>
         </label>
         <label>
             <input name="password" type="password" placeholder="Password" required>
         </label>
-        <input type="submit" value="Login">
-        <p>Don't have an account? <a href="/register">Sign up</a></p>
+        <input type="submit" value="Register">
+        <p>Already have an account? <a href="/login">Log in</a></p>
     </form>
-
 </div>
 </body>
 </html>

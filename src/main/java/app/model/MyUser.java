@@ -10,8 +10,10 @@ public class MyUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(unique = true)
     private String username;
     private String password;
+
     @OneToMany(mappedBy = "myUser", cascade = CascadeType.ALL)
     private List<MyOrder> myOrders;
 
@@ -23,5 +25,13 @@ public class MyUser {
 
     protected MyUser() {
         myOrders =new LinkedList<>();
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public List<MyOrder> getMyOrders() {
+        return myOrders;
     }
 }
